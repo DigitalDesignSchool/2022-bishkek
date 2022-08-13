@@ -27,12 +27,24 @@ git clean -d -f ..
 # -P - Perl-style regexp
 # -U - don't strip CR from text file by default
 
-if [ "$OSTYPE" = linux-gnu ] && grep -rqIPU '\r$' ../*/
+if [ "$OSTYPE" = linux-gnu ] && grep -rqIPU '\r$' ../*
 then
-  grep -rlIPU '\r$' ../*/
+  grep -rlIPU '\r$' ../*
 
   error "there are text files with DOS/Windows CR-LF line endings." \
-        "You can fix them by doing:\ngrep -rlIPU '\\\\r\$' $root/*/ | xargs dos2unix"
+        "You can fix them by doing:\ngrep -rlIPU '\\\\r\$' $root/* | xargs dos2unix"
+fi
+
+# $'...' - string literal in Bash with C semantics
+
+if grep -rqI $'\t' ../*
+then
+  grep -rlI $'\t' ../*
+
+  error "there are text files with tabulation characters." \
+        "Tabs should not be used." \
+        "Developers should not need to configure the tab width of their text editors in order to be able to read source code." \
+        "Please replace the tabs with spaces before checking in or creating a package."
 fi
 
 ls -d ../day*/lab*/ | xargs -n 1 cp {top.,x_,xx_,run_icarus,run_questa}* \
