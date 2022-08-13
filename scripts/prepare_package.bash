@@ -20,22 +20,20 @@ git clean -d -f ..
 
 # Search for the text files with DOS/Windows CR-LF line endings
 
-# -r - recursive
-# -l - file list
-# -q - status only
-# -I - Ignore binary files
-# -P - Perl-style regexp
-# -U - don't strip CR from text file by default
+# -r     - recursive
+# -l     - file list
+# -q     - status only
+# -I     - Ignore binary files
+# -U     - don't strip CR from text file by default
+# $'...' - string literal in Bash with C semantics ('\r', '\t')
 
-if [ "$OSTYPE" = linux-gnu ] && grep -rqIPU '\r$' ../*
+if [ "$OSTYPE" = linux-gnu ] && grep -rqIU $'\r$' ../*
 then
-  grep -rlIPU '\r$' ../*
+  grep -rlIU $'\r$' ../*
 
   error "there are text files with DOS/Windows CR-LF line endings." \
-        "You can fix them by doing:\ngrep -rlIPU '\\\\r\$' $root/* | xargs dos2unix"
+        "You can fix them by doing:\ngrep -rlIU \$'\\\\r\$' $root/* | xargs dos2unix"
 fi
-
-# $'...' - string literal in Bash with C semantics
 
 if grep -rqI $'\t' ../*
 then
